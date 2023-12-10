@@ -45,7 +45,7 @@ The built script will be in `dist` folder.
 There are two way to setup the sync, one is using the WebDAV sync feature
 provided by extension.
 
-### Sync with fake WebDAV by extension
+### 1. Sync with fake WebDAV by extension
 
 #### 1. First, start dev server by running
 
@@ -82,6 +82,30 @@ For Tampermonkey, you can follow the steps below:
 4. Click `Save`.
 
 Then you can click the "Run now" button to start sync.
+
+### 2. Use @require to import script
+
+There is another way to sync the script with extension, that is to create a new
+script then using `@require` to import the script.
+
+e.g. Create a new script with the following content:
+
+```js
+// ==UserScript==
+// @name         Import script from url
+// @description  A proxy script to import script from url
+// @version      0.0.1
+// @namespace    localhost
+// @match        *://*/*
+// @require      http://localhost:9000/bundle.user.js
+// @grant        none
+// ==/UserScript==
+```
+
+Note that if you use this way, the script will be cached by the extension. You
+have to clear the cached script in extension after you rebuild the script.
+
+e.g. For Tampermonkey, you can go to `Externals > Requires` in script editor and click `Delete` button.
 
 ## FAQ
 
