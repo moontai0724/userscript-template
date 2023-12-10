@@ -19,7 +19,7 @@ const initialUUID = process.env.UUID ?? "12345678-1234-1234-123456789012";
 const cacheFolder = path.join(__dirname, "..", ".cache");
 const cacheFilePath = path.join(cacheFolder, "uuid-cache.json");
 
-function saveUUIDCache(self: string, all: string[]) {
+function saveCache(self: string, all: string[]) {
   if (!fs.existsSync(cacheFolder))
     fs.mkdirSync(cacheFolder, { recursive: true });
   const cachePath = path.join(cacheFilePath);
@@ -28,7 +28,7 @@ function saveUUIDCache(self: string, all: string[]) {
   fs.writeFileSync(cachePath, cacheContent);
 }
 
-function getUUIDCache() {
+function getCache() {
   if (!fs.existsSync(cacheFilePath)) return { all: [], self: initialUUID };
   if (!fs.existsSync(cacheFolder))
     fs.mkdirSync(cacheFolder, { recursive: true });
@@ -58,7 +58,7 @@ let {
    */
   // eslint-disable-next-line prefer-const
   all: allFileNames = [],
-} = getUUIDCache();
+} = getCache();
 
 const ACTUAL_FILE_DIR_PATH = path.join(__dirname, "..", "dist");
 const ACTUAL_FILE_PATH = path.join(ACTUAL_FILE_DIR_PATH, "bundle.user.js");
@@ -73,6 +73,10 @@ function getScriptName() {
   const name = packageJson["user-script-meta"].name || packageJson.name;
 
   return name;
+}
+
+function getUUID() {
+  return process.env.UUID ?? UUID;
 }
 
 /**
@@ -236,9 +240,11 @@ const fakeFiles = new Proxy(
   },
   {
     get(target, name) {
-      if (name === `${UUID}.meta.json`) {
+      const actualUUID = getUUID();
+
+      if (name === `${actualUUID}.meta.json`) {
         return target[`${initialUUID}.meta.json`];
-      } else if (name === `${UUID}.user.js`) {
+      } else if (name === `${actualUUID}.user.js`) {
         return target[`${initialUUID}.user.js`];
       }
 
@@ -251,10 +257,12 @@ const fakeFiles = new Proxy(
       };
     },
     ownKeys() {
+      const actualUUID = getUUID();
+
       return [
-        `${UUID}.meta.json`,
-        `${UUID}.user.js`,
-        ...allFileNames.filter(name => !name.includes(UUID)),
+        `${actualUUID}.meta.json`,
+        `${actualUUID}.user.js`,
+        ...allFileNames.filter(name => !name.includes(actualUUID)),
       ];
     },
   },
@@ -372,13 +380,14 @@ const methods: Record<
     };
 
     if (debug) console.debug("received meta:", parsedBody);
+
     if (parsedBody.name === getScriptName()) {
       if (parsedBody.uuid !== UUID) {
         UUID = parsedBody.uuid;
-        console.info("UUID auto updated to:", UUID);
-      }
+      console.info(`UUID updated to ${UUID}`);
     }
-    saveUUIDCache(UUID, allFileNames);
+    }
+    saveCache(UUID, allFileNames);
     response.statusCode = 200;
 
     return response.end();
@@ -436,6 +445,6 @@ const port = Number(process.env.PORT || 9000);
 server.listen(port, host, undefined, () => {
   console.info(`WebDAV server is listening on http://${host}:${port}`);
   console.info(
-    `You can install current script from: http://${host}:${port}/Tampermonkey/sync/${UUID}.user.js`,
+    `You can install current script from: http://${host}:${port}/Tampermonkey/sync/${getUUID()}.user.js`,
   );
 });
