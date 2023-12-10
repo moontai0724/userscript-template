@@ -324,14 +324,17 @@ const methods: Record<
   },
   propfind(uri, request, response) {
     const resolvedPath = path.resolve(uri.pathname);
-    const filePathParts = resolvedPath.slice(1).split(path.sep);
+    const filePathParts = [
+      "fakeFileStructure",
+      ...resolvedPath.slice(1).split(path.sep).filter(Boolean),
+    ];
 
     const handler = filePathParts.reduce<unknown>(
       (prev, curr) =>
         (prev as Record<string, () => string> | undefined)?.[
           curr as keyof typeof prev
         ],
-      fakeFileStructure,
+      { fakeFileStructure },
     ) as (() => string) | undefined;
 
     if (debug) console.debug("propfind: ", uri.pathname);
