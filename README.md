@@ -61,13 +61,13 @@ The console output should hint you the link to install the script like this:
 
 ```bash
 WebDAV server is listening on http://0.0.0.0:9000
-You can install current script from: http://0.0.0.0:9000/Tampermonkey/sync/12345678-1234-1234-123456789012.user.js
+You can install current script from: http://0.0.0.0:9000/bundle.user.js
 ```
 
 Or if this is the first time you start this dev server, you should be able to
 install the script from the link below:
 
-http://localhost:9000/Tampermonkey/sync/12345678-1234-1234-123456789012.user.js
+http://localhost:9000/bundle.user.js
 
 #### 3. Setup WebDAV sync in extension
 
@@ -97,3 +97,6 @@ e.g.
 `chrome-extension://dhdgffkkebhmkfjojejmpbldmpobfkfo/options.html#nav=ac6c73b7-55ec-446e-884c-7cab2087278c+editor`
 
 For example above, `ac6c73b7-55ec-446e-884c-7cab2087278c` is the UUID.
+
+Or you can then click the "Settings" tab, there will be a "UUID" field in
+"Details" section.

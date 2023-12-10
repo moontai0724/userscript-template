@@ -209,6 +209,23 @@ function receiveBody(request: http.IncomingMessage): Promise<string> {
   });
 }
 
+function getMetaContent() {
+  const content = {
+    lastModified: Date.now().toString(),
+    name: getScriptName(),
+    options: {},
+    uuid: UUID,
+  };
+
+  return JSON.stringify(content);
+}
+
+function getActualFileContent() {
+  const content = fs.readFileSync(ACTUAL_FILE_PATH);
+
+  return content;
+}
+
 /**
  * This Proxy will return an object with key-value pair that the key is the
  * script file name and the value is a function which will returns expected file
@@ -222,21 +239,8 @@ function receiveBody(request: http.IncomingMessage): Promise<string> {
  */
 const fakeFiles = new Proxy(
   {
-    [`${initialUUID}.meta.json`]: () => {
-      const content = {
-        lastModified: Date.now().toString(),
-        name: getScriptName(),
-        options: {},
-        uuid: UUID,
-      };
-
-      return JSON.stringify(content);
-    },
-    [`${initialUUID}.user.js`]: () => {
-      const content = fs.readFileSync(ACTUAL_FILE_PATH);
-
-      return content;
-    },
+    [`${initialUUID}.meta.json`]: getMetaContent,
+    [`${initialUUID}.user.js`]: getActualFileContent,
   },
   {
     get(target, name) {
@@ -276,6 +280,8 @@ const fakeFileStructure = {
   Tampermonkey: {
     sync: fakeFiles,
   },
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  "bundle.user.js": getActualFileContent,
 };
 
 /**
@@ -384,8 +390,8 @@ const methods: Record<
     if (parsedBody.name === getScriptName()) {
       if (parsedBody.uuid !== UUID) {
         UUID = parsedBody.uuid;
-      console.info(`UUID updated to ${UUID}`);
-    }
+        console.info(`UUID updated to ${UUID}`);
+      }
     }
     saveCache(UUID, allFileNames);
     response.statusCode = 200;
@@ -445,6 +451,6 @@ const port = Number(process.env.PORT || 9000);
 server.listen(port, host, undefined, () => {
   console.info(`WebDAV server is listening on http://${host}:${port}`);
   console.info(
-    `You can install current script from: http://${host}:${port}/Tampermonkey/sync/${getUUID()}.user.js`,
+    `You can install current script from: http://${host}:${port}/bundle.user.js`,
   );
 });
