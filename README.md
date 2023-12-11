@@ -5,19 +5,37 @@ on file changes, seamless WebDAV integration for extension syncing, semantic
 commit-based versioning, and a robust CI/CD pipeline for automated releases.
 
 - UserScript Template
+  - [Getting Started](#getting-started)
+    - [1. Use this template to create a new repository](#1-use-this-template-to-create-a-new-repository)
+    - [2. Clone the repository](#2-clone-the-repository)
+    - [3. Install dependencies with pnpm install](#3-install-dependencies-with-pnpm-install)
+    - [4. Adjust script basic informations in package.json](#4-adjust-script-basic-informations-in-packagejson)
+    - [5. Start the dev server with pnpm dev](#5-start-the-dev-server-with-pnpm-dev)
+    - [6. Setup sync for script to your extension](#6-setup-sync-for-script-to-your-extension)
+    - [7. Start developing!](#7-start-developing)
   - [Usage](#usage)
-    - [1. Install dependencies](#1-install-dependencies)
-    - [2. Start the dev server](#2-start-the-dev-server)
-    - [3. Build the script](#3-build-the-script)
+    - [1. Start the dev server](#1-start-the-dev-server)
+    - [2. Build the script](#2-build-the-script)
   - [Sync with extension](#sync-with-extension)
     - [1. Sync with fake WebDAV by extension](#1-sync-with-fake-webdav-by-extension)
     - [2. Use @require to import script](#2-use-require-to-import-script)
   - [FAQ](#faq)
     - [How to get the script’s UUID?](#how-to-get-the-scripts-uuid)
 
-## Usage
+## Getting Started
 
-### 1. Install dependencies
+### 1. Use this template to create a new repository
+
+Click the `Use this template > Create a new repository` button to create a new
+repository based on this template.
+
+### 2. Clone the repository
+
+```bash
+git clone <YOUR REPOSITORY URL>/userscript-template.git
+```
+
+### 3. Install dependencies with `pnpm install`
 
 This project uses [pnpm](https://pnpm.io/) as package manager, you can
 install it by running:
@@ -38,7 +56,47 @@ Then install dependencies by running:
 pnpm install
 ```
 
-### 2. Start the dev server
+### 4. Adjust script basic informations in `package.json`
+
+This template will read informations in `package.json` to generate the script
+header, so you have to adjust the informations in `package.json` to fit your
+script.
+
+The following fields are recommended to be filled first:
+
+| Field         | Required | Description                                                    |
+| ------------- | -------- | -------------------------------------------------------------- |
+| `name`        | Yes      | The `name` of the script.                                      |
+| `description` | Yes      | The `description` of the script.                               |
+| `author.name` | Yes      | The `author` of the script, fill your name there.              |
+| `homepage`    | No       | This will be the `namespace` and the `homepage` of the script. |
+
+The script will read the `user-script-meta` field in `package.json` as the base
+of the script header, then read above fields as an alternative value if empty.
+It will take the key as the header field name, and take the value as the header
+field value. So you can add any field you want to the `user-script-meta` field.
+
+For more detail, you can see [webpack.config.js](./webpack.config.js).
+
+### 5. Start the dev server with `pnpm dev`
+
+```bash
+pnpm dev
+```
+
+For more detail, you can see [1. Start the dev server](#1-start-the-dev-server).
+
+### 6. Setup sync for script to your extension
+
+You could follows any one step in [Sync with extension](#sync-with-extension).
+
+### 7. Start developing!
+
+All done! Open `src/index.ts` and start editing.
+
+## Usage
+
+### 1. Start the dev server
 
 To start a development WebDAV server and auto rebuild the script on file
 changes, run:
@@ -64,7 +122,7 @@ For example, if you want to change the port to `8080`, you can run:
 PORT=8080 pnpm dev
 ```
 
-### 3. Build the script
+### 2. Build the script
 
 ```bash
 pnpm build
