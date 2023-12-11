@@ -4,9 +4,41 @@ An out-of-the-box template simplifying userscript development with auto-rebuilds
 on file changes, seamless WebDAV integration for extension syncing, semantic
 commit-based versioning, and a robust CI/CD pipeline for automated releases.
 
+- UserScript Template
+  - [Usage](#usage)
+    - [1. Install dependencies](#1-install-dependencies)
+    - [2. Start the dev server](#2-start-the-dev-server)
+    - [3. Build the script](#3-build-the-script)
+  - [Sync with extension](#sync-with-extension)
+    - [1. Sync with fake WebDAV by extension](#1-sync-with-fake-webdav-by-extension)
+    - [2. Use @require to import script](#2-use-require-to-import-script)
+  - [FAQ](#faq)
+    - [How to get the script’s UUID?](#how-to-get-the-scripts-uuid)
+
 ## Usage
 
-### Start the dev server
+### 1. Install dependencies
+
+This project uses [pnpm](https://pnpm.io/) as package manager, you can
+install it by running:
+
+```bash
+npm install -g pnpm
+```
+
+or directly install it:
+
+```bash
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+```
+
+Then install dependencies by running:
+
+```bash
+pnpm install
+```
+
+### 2. Start the dev server
 
 To start a development WebDAV server and auto rebuild the script on file
 changes, run:
@@ -32,7 +64,7 @@ For example, if you want to change the port to `8080`, you can run:
 PORT=8080 pnpm dev
 ```
 
-### Build the script
+### 3. Build the script
 
 ```bash
 pnpm build
