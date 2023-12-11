@@ -4,6 +4,7 @@
   "license": "MIT",
   "version": "0.0.0",
   "private": true,
+  "main": "src/index.ts",
   "author": {
     "name": "moontai0724"
   },
@@ -23,7 +24,7 @@
     "lint:eslint": "eslint --ext \".ts,.js,.vue\" --ignore-path .gitignore .",
     "lint:style": "stylelint \"**/*.{vue,css}\" --ignore-path .gitignore --allow-empty-input",
     "lint:prettier": "prettier --check --ignore-unknown .",
-    "dev": "pnpm ts-node-dev --files --respawn --watch src/ scripts/webdav.ts",
+    "dev": "pnpm ts-node-dev --project=./scripts/tsconfig.json --rs --files --respawn --watch src/ scripts/webdav.ts",
     "build": "webpack --config webpack.config.js",
     "prepare": "husky install"
   },
