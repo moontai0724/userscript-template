@@ -30,11 +30,10 @@ module.exports = {
       banner: () => {
         const scriptMeta = meta["user-script-meta"];
 
+        scriptMeta.version = meta.version;
         if (!scriptMeta.name && meta.name) scriptMeta.name = meta.name;
         if (!scriptMeta.namespace && meta.homepage)
           scriptMeta.namespace = meta.homepage;
-        if (!scriptMeta.version && meta.version)
-          scriptMeta.version = meta.version;
         if (!scriptMeta.description && meta.description)
           scriptMeta.description = meta.description;
         if (!scriptMeta.author && (meta.author?.name || meta.author))

@@ -78,6 +78,13 @@ field value. So you can add any field you want to the `user-script-meta` field.
 
 For more detail, you can see [webpack.config.js](./webpack.config.js).
 
+The version here will be auto updated by semantic commit message when you pushes
+commits to `main` branch, by supporting of
+[`standard-version`](https://github.com/conventional-changelog/standard-version).
+
+If you're not familiar with semantic commit message, you can see [Conventional
+Commits](https://www.conventionalcommits.org/) for more detail.
+
 ### 5. Start the dev server with `pnpm dev`
 
 ```bash
