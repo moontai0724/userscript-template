@@ -17,8 +17,8 @@ commit-based versioning, and a robust CI/CD pipeline for automated releases.
     - [1. Start the dev server](#1-start-the-dev-server)
     - [2. Build the script](#2-build-the-script)
   - [Sync with extension](#sync-with-extension)
-    - [1. Sync with fake WebDAV by extension](#1-sync-with-fake-webdav-by-extension)
-    - [2. Use @require to import script](#2-use-require-to-import-script)
+    - [Way 1. Use @require to import script](#way-1-use-require-to-import-script)
+    - [Way 2. Sync with fake WebDAV by extension](#way-2-sync-with-fake-webdav-by-extension)
   - [FAQ](#faq)
     - [How to get the script’s UUID?](#how-to-get-the-scripts-uuid)
 
@@ -37,8 +37,8 @@ git clone <YOUR REPOSITORY URL>/userscript-template.git
 
 ### 3. Install dependencies with `pnpm install`
 
-This project uses [pnpm](https://pnpm.io/) as package manager, you can
-install it by running:
+This project uses [pnpm](https://pnpm.io/) as package manager, you can install
+it by running:
 
 ```bash
 npm install -g pnpm
@@ -139,51 +139,22 @@ The built script will be in `dist` folder.
 
 ## Sync with extension
 
-There are two way to setup the sync, one is using the WebDAV sync feature
-provided by extension.
-
-### 1. Sync with fake WebDAV by extension
-
-#### 1. First, start dev server by running
+There are two way to setup the sync. To use the auto sync feature, you have to
+start the dev server first.
 
 ```bash
 pnpm dev
 ```
 
-#### 2. Install the script to extension
+You can see [5. Start the dev server with pnpm
+dev](#5-start-the-dev-server-with-pnpm-dev) for more detail.
 
-After you start the dev server, you can install the script to extension.
+### Way 1. Use @require to import script
 
-The console output should hint you the link to install the script like this:
+#### Step 1-1. Add a loader script to your extension
 
-```bash
-WebDAV server is listening on http://0.0.0.0:9000
-You can install current script from: http://0.0.0.0:9000/bundle.user.js
-```
-
-Or if this is the first time you start this dev server, you should be able to
-install the script from the link below:
-
-http://localhost:9000/bundle.user.js
-
-#### 3. Setup WebDAV sync in extension
-
-Then you can setup the WebDAV sync in extension.
-
-For Tampermonkey, you can follow the steps below:
-
-1. Go to `Tampermonkey > Settings > General > Config Mode` and set as
-   `Advanced`.
-2. Fill `URL` in `Userscript Sync` with `http://localhost:8080/`.
-3. Check `Enable Userscript Sync` in `Userscript Sync`.
-4. Click `Save`.
-
-Then you can click the "Run now" button to start sync.
-
-### 2. Use @require to import script
-
-There is another way to sync the script with extension, that is to create a new
-script then using `@require` to import the script.
+This is the easiest way to sync the script with extension. You can add a loader
+script to your extension, then use `@require` to import the script.
 
 e.g. Create a new script with the following content:
 
@@ -199,10 +170,58 @@ e.g. Create a new script with the following content:
 // ==/UserScript==
 ```
 
-Note that if you use this way, the script will be cached by the extension. You
-have to clear the cached script in extension after you rebuild the script.
+Then the script will be loaded by this script. You may now browse the website
+and you'll find it works.
 
-e.g. For Tampermonkey, you can go to `Externals > Requires` in script editor and click `Delete` button.
+If you're using this way, you might have to check the script header.
+
+#### Step 1-2. Clear the cached script in extension or set the cache time to 0
+
+Note that if you use this way, the external script will be cached by the
+extension. You can either manually clear the cached script in extension or set
+the external script update time to always.
+
+Manual clear the cached script in extension:
+
+e.g. For Tampermonkey, you can go to `Externals > Requires` in script editor and
+click `Delete` button.
+
+Set the external script update time to always:
+
+e.g. For Tampermonkey, you can go to `Settings > Externals` in extension
+Settings and set `Update Interval` to `Always`.
+
+### Way 2. Sync with fake WebDAV by extension
+
+#### Step 2-1. Install the script to extension
+
+After you start the dev server, you can install the script to extension.
+
+The console output should hint you the link to install the script like this:
+
+```bash
+WebDAV server is listening on http://0.0.0.0:9000
+You can install current script from: http://0.0.0.0:9000/bundle.user.js
+```
+
+Or if this is the first time you start this dev server, you should be able to
+install the script from the link below:
+
+http://localhost:9000/bundle.user.js
+
+#### Step 2-2. Setup WebDAV sync in extension
+
+Then you can setup the WebDAV sync in extension.
+
+For Tampermonkey, you can follow the steps below:
+
+1. Go to `Tampermonkey > Settings > General > Config Mode` and set as
+   `Advanced`.
+2. Fill `URL` in `Userscript Sync` with `http://localhost:8080/`.
+3. Check `Enable Userscript Sync` in `Userscript Sync`.
+4. Click `Save`.
+
+Then you can click the "Run now" button to start sync.
 
 ## FAQ
 
