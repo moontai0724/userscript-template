@@ -6,8 +6,24 @@ import fs from "fs";
 import http, { type RequestListener } from "http";
 import path from "path";
 
+const ACTUAL_FILE_DIR_PATH = path.join(__dirname, "..", "dist");
+const ACTUAL_FILE_PATH = path.join(ACTUAL_FILE_DIR_PATH, "bundle.user.js");
+
 // Build
-console.log(execSync("pnpm build").toString());
+try {
+  const buildLog = execSync("pnpm build");
+  console.log(buildLog.toString());
+  fs.writeFileSync(
+    ACTUAL_FILE_PATH,
+    `console.log("Developing UserScript Updated At: ${Date.now()} (${new Date().toLocaleString()})");`,
+    {
+      flag: "a",
+    },
+  );
+} catch (error) {
+  console.error((error as { stdout: Buffer }).stdout.toString());
+  process.exit(1);
+}
 
 const debug = Boolean(process.env.DEBUG);
 
@@ -59,9 +75,6 @@ let {
   // eslint-disable-next-line prefer-const
   all: allFileNames = [],
 } = getCache();
-
-const ACTUAL_FILE_DIR_PATH = path.join(__dirname, "..", "dist");
-const ACTUAL_FILE_PATH = path.join(ACTUAL_FILE_DIR_PATH, "bundle.user.js");
 
 function getScriptName() {
   const packageJsonPath = path.join(__dirname, "..", "package.json");
