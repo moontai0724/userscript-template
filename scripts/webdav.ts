@@ -7,7 +7,7 @@ import http, { type RequestListener } from "http";
 import path from "path";
 
 // Build
-execSync("pnpm build");
+console.log(execSync("pnpm build").toString());
 
 const debug = Boolean(process.env.DEBUG);
 
