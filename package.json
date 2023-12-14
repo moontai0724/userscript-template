@@ -2,7 +2,7 @@
   "name": "your-script",
   "description": "A brief description for your script.",
   "license": "MIT",
-  "version": "0.0.0",
+  "version": "0.0.0-pre",
   "private": true,
   "main": "src/index.ts",
   "author": {
