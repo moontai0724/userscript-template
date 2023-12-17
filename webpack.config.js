@@ -8,9 +8,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.ts$/,
         use: "ts-loader",
-        exclude: /node_modules/,
+        exclude: [/node_modules/],
       },
       {
         test: /\.html$/i,
@@ -18,6 +18,10 @@ module.exports = {
         options: {
           esModule: true,
         },
+      },
+      {
+        test: /\.inline\.ts$/i,
+        type: "asset/inline",
       },
     ],
   },
