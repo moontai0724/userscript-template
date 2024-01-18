@@ -4,19 +4,14 @@ import { viteSingleFile } from "vite-plugin-singlefile";
 import { resolve } from "path";
 import { readdirSync } from "fs";
 
-const alias = readdirSync(resolve(__dirname, "src/views")).reduce(
-  (acc, value) => {
-    acc[value] = resolve(__dirname, `src/views/${value}`);
-    return acc;
-  },
-  {
-    "@": resolve(__dirname, "src"),
-  }
-);
+const alias = readdirSync(resolve(__dirname, "views")).reduce((acc, value) => {
+  acc[value] = resolve(__dirname, `views/${value}`);
+  return acc;
+}, {});
 
-const pages = readdirSync(resolve(__dirname, "src/views/pages")).reduce(
+const pages = readdirSync(resolve(__dirname, "views/pages")).reduce(
   (acc, name) => {
-    acc[name] = resolve(__dirname, `src/views/pages/${name}/index.html`);
+    acc[name] = resolve(__dirname, `views/pages/${name}/index.html`);
     return acc;
   },
   {}
@@ -24,7 +19,7 @@ const pages = readdirSync(resolve(__dirname, "src/views/pages")).reduce(
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: "./src/views",
+  root: "views",
   plugins: [vue(), viteSingleFile({ removeViteModuleLoader: true })],
   publicDir: false,
   resolve: {
