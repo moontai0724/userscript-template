@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm build:view && pnpm build:script",
-    "build:script": "rollup -c --configPlugin typescript",
+    "build:script": "rollup -c --configPlugin typescript --bundleConfigAsCjs",
     "build:view": "vue-tsc -p views && vite build",
     "preview": "vite preview"
   },
@@ -14,6 +14,7 @@
     "vue": "^3.3.11"
   },
   "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/node": "^20.11.5",
     "@vitejs/plugin-vue": "^4.5.2",

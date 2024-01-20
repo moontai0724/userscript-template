@@ -7,6 +7,9 @@
     "skipLibCheck": true,
     "rootDir": ".",
     "baseUrl": ".",
+    "paths": {
+      "@views/*": ["../views/dist/pages/*"]
+    },
     "types": [],
 
     /* Bundler mode */
