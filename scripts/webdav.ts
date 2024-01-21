@@ -1,3 +1,6 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable max-classes-per-file */
 import fs from "fs";
 import http, { type RequestListener } from "http";
 import path from "path";
@@ -63,7 +66,7 @@ function getScriptName() {
   const packageJsonPath = path.join(__dirname, "..", "package.json");
   const packageJsonContent = fs.readFileSync(packageJsonPath);
   const packageJson = JSON.parse(
-    packageJsonContent.toString()
+    packageJsonContent.toString(),
     // eslint-disable-next-line @typescript-eslint/naming-convention
   ) as { name?: string; "user-script-meta": { name?: string } };
   const name = packageJson["user-script-meta"].name || packageJson.name;
@@ -86,7 +89,7 @@ namespace WebDavXML {
     constructor(
       public name: string,
       content?: Item[] | string,
-      public attributes: string[] = []
+      public attributes: string[] = [],
     ) {
       if (typeof content === "string") {
         this.childs.push(content);
@@ -114,7 +117,7 @@ namespace WebDavXML {
 
         return "";
       })();
-      const childs = this.childs.map((child) => child.toString()).join("");
+      const childs = this.childs.map(child => child.toString()).join("");
 
       if (!childs) {
         return `<d:${this.name}${attributes} />`;
@@ -127,8 +130,8 @@ namespace WebDavXML {
   export class MultiStatusDocument extends Item {
     constructor() {
       super("multistatus", undefined, [
-        `xmlns:d="DAV:"`,
-        `xmlns:td="http://dav.tampermonkey.net/ns"`,
+        'xmlns:d="DAV:"',
+        'xmlns:td="http://dav.tampermonkey.net/ns"',
       ]);
     }
 
@@ -140,7 +143,7 @@ namespace WebDavXML {
   export class Collection extends Item {
     constructor(
       protected filePath: string,
-      protected lastModified: string = new Date().toUTCString()
+      protected lastModified: string = new Date().toUTCString(),
     ) {
       super("response");
     }
@@ -155,7 +158,7 @@ namespace WebDavXML {
             new Item("getcontentlength"),
           ]),
           new Item("status", "HTTP/1.1 200 OK"),
-        ])
+        ]),
       );
 
       return super.toString();
@@ -166,7 +169,7 @@ namespace WebDavXML {
     constructor(
       protected filePath: string,
       protected lastModified: string = new Date().toUTCString(),
-      protected fileSize: number | string = 0
+      protected fileSize: number | string = 0,
     ) {
       super("response");
     }
@@ -181,7 +184,7 @@ namespace WebDavXML {
             new Item("getcontentlength", this.fileSize.toString()),
           ]),
           new Item("status", "HTTP/1.1 200 OK"),
-        ])
+        ]),
       );
 
       return super.toString();
@@ -244,7 +247,8 @@ const fakeFiles = new Proxy(
 
       if (name === `${actualUUID}.meta.json`) {
         return target[`${initialUUID}.meta.json`];
-      } else if (name === `${actualUUID}.user.js`) {
+      }
+      if (name === `${actualUUID}.user.js`) {
         return target[`${initialUUID}.user.js`];
       }
 
@@ -262,10 +266,10 @@ const fakeFiles = new Proxy(
       return [
         `${actualUUID}.meta.json`,
         `${actualUUID}.user.js`,
-        ...allFileNames.filter((name) => !name.includes(actualUUID)),
+        ...allFileNames.filter(name => !name.includes(actualUUID)),
       ];
     },
-  }
+  },
 );
 
 /**
@@ -301,7 +305,7 @@ const methods: Record<
         (prev as Record<string, () => string> | undefined)?.[
           curr as keyof typeof prev
         ],
-      fakeFileStructure
+      fakeFileStructure,
     ) as (() => string) | undefined;
 
     if (!handler || typeof handler !== "function") {
@@ -330,7 +334,7 @@ const methods: Record<
         (prev as Record<string, () => string> | undefined)?.[
           curr as keyof typeof prev
         ],
-      { fakeFileStructure }
+      { fakeFileStructure },
     ) as (() => string) | undefined;
 
     if (debug) console.debug("propfind: ", uri.pathname);
@@ -351,7 +355,7 @@ const methods: Record<
 
       if (debug) console.debug("files: ", files);
       const fileItems = files.map(
-        (file) => new WebDavXML.File(path.join(uri.pathname, file))
+        file => new WebDavXML.File(path.join(uri.pathname, file)),
       );
 
       responseDocument.addChildren(...fileItems);
@@ -408,7 +412,7 @@ const methods: Record<
 // eslint-disable-next-line func-style
 const requestHandler: RequestListener = function requestHandler(
   request,
-  response
+  response,
 ) {
   request.on("error", (error: Error) => {
     console.error(error, request);
@@ -435,7 +439,7 @@ const requestHandler: RequestListener = function requestHandler(
 
   response.setHeader(
     "Cache-Control",
-    "no-store, no-cache, must-revalidate, post-check=0, pre-check=0"
+    "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
   );
 
   response.setHeader("DAV", "1");
@@ -450,7 +454,7 @@ const port = Number(process.env.PORT || 9000);
 server.listen(port, host, undefined, () => {
   console.info(`WebDAV server is listening on http://${host}:${port}`);
   console.info(
-    `You can install current script from: http://${host}:${port}/bundle.user.js`
+    `You can install current script from: http://${host}:${port}/bundle.user.js`,
   );
 });
 

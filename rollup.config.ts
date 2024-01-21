@@ -1,11 +1,16 @@
-import html from "rollup-plugin-html";
-import license from "rollup-plugin-license";
 import alias from "@rollup/plugin-alias";
 import typescript from "@rollup/plugin-typescript";
 import { resolve } from "path";
+import html from "rollup-plugin-html";
+import license from "rollup-plugin-license";
 
 export default {
   input: "src/index.ts",
+  output: {
+    file: "dist/bundle.user.js",
+    format: "umd",
+    minifyInternalExports: false,
+  },
   plugins: [
     alias({
       entries: [
@@ -16,18 +21,19 @@ export default {
       tsconfig: "src/tsconfig.json",
     }),
     html({
-      include: "**/*.html",
       htmlMinifierOptions: {
-        collapseWhitespace: true,
         collapseBooleanAttributes: true,
+        collapseWhitespace: true,
         conservativeCollapse: true,
         minifyJS: true,
       },
+      include: "**/*.html",
     }),
     license({
       banner: {
         commentStyle: "none",
         content: (() => {
+          // eslint-disable-next-line global-require
           const meta = require("./package.json");
           const scriptMeta = meta["user-script-meta"] || {};
 
@@ -45,33 +51,28 @@ export default {
             scriptMeta.supportURL = meta.bugs.url || meta.homepage;
 
           const metaString = Object.entries(scriptMeta)
-            .map(([key, value]) => {
+            .map(([metaKey, metaValue]) => {
               function getMetaString(key, value) {
                 return `// @${key.padEnd(15)} ${value}`;
               }
 
-              if (Array.isArray(value)) {
-                return value.map((v) => getMetaString(key, v)).join("\n");
+              if (Array.isArray(metaValue)) {
+                return metaValue.map(v => getMetaString(metaKey, v)).join("\n");
               }
 
-              if (typeof value === "object") {
-                return Object.entries(value)
-                  .map(([k, v]) => getMetaString(`${key}:${k}`, v))
+              if (typeof metaValue === "object") {
+                return Object.entries(metaValue)
+                  .map(([k, v]) => getMetaString(`${metaKey}:${k}`, v))
                   .join("\n");
               }
 
-              return getMetaString(key, value);
+              return getMetaString(metaKey, metaValue);
             })
             .join("\n");
 
-          return "// ==UserScript==\n" + metaString + "\n// ==/UserScript==\n";
+          return `// ==UserScript==\n${metaString}\n// ==/UserScript==\n`;
         })(),
       },
     }),
   ],
-  output: {
-    file: "dist/bundle.user.js",
-    format: "umd",
-    minifyInternalExports: false,
-  },
 };
