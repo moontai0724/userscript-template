@@ -26,7 +26,7 @@ automated releases.
 
 ### 1. Use this template to create a new repository
 
-Click the `Use this template > Create a new repository` button to create a new
+Click the [`Use this template > Create a new repository`](https://github.com/new?template_name=userscript-template&template_owner=moontai0724) button to create a new
 repository based on this template.
 
 ### 2. Clone the repository
