@@ -1,7 +1,7 @@
 {
   "name": "userscript-template-v2",
   "description": "A brief description for your script.",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "version": "0.0.0-pre",
   "private": true,
   "author": {
